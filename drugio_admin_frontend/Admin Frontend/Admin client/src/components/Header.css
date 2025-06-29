@@ -1,0 +1,11 @@
+.header {
+  background-color: #007bff; /* Bootstrap already has primary color */
+  color: white;
+  width: calc(100% - 250px); /* Subtract sidebar width */
+  position: fixed;
+  top: 0;
+  left: 250px; /* Start after sidebar */
+  height: 60px;
+  z-index: 1000;
+  padding-left: 4%;
+}
