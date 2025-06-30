@@ -1,11 +1,11 @@
-// Import required modules
-const axios = require("axios");
-const db = require("../config/db.js"); // Your database connection
+import axios from "axios";
+import db from "../config/db.js";
+import dotenv from "dotenv";
 
-// Google Maps API Key (Get one from: https://developers.google.com/maps/documentation/geocoding/get-api-key)
-const GEOCODING_API_KEY = "YOUR_GOOGLE_MAPS_API_KEY"; // 🔴 REPLACE THIS!
+dotenv.config();
 
-// Function to convert address → coordinates
+const GEOCODING_API_KEY = process.env.GEOCODING_API_KEY;
+
 async function geocodeAddress(address) {
   try {
     const response = await axios.get(
@@ -29,45 +29,57 @@ async function geocodeAddress(address) {
   }
 }
 
-// Update all pharmacies in the database
+function queryDb(sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.query(sql, params, (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
+  });
+}
+
 async function updatePharmacyCoordinates() {
   console.log("🔍 Fetching pharmacies without coordinates...");
 
-  // Get pharmacies that need geocoding
-  const [pharmacies] = await db
-    .promise()
-    .query(
+  try {
+    // Get pharmacies that need geocoding
+    const pharmacies = await queryDb(
       "SELECT * FROM Pharmacy WHERE latitude IS NULL OR longitude IS NULL"
     );
 
-  if (pharmacies.length === 0) {
-    console.log("✅ All pharmacies already have coordinates!");
-    return;
-  }
+    if (pharmacies.length === 0) {
+      console.log("✅ All pharmacies already have coordinates!");
+      return;
+    }
 
-  console.log(`📌 Found ${pharmacies.length} pharmacies to geocode...`);
+    console.log(`📌 Found ${pharmacies.length} pharmacies to geocode...`);
 
-  // Process each pharmacy
-  for (const pharmacy of pharmacies) {
-    console.log(`📍 Geocoding: ${pharmacy.pharmacyName} (${pharmacy.address})`);
+    // Process each pharmacy
+    for (const pharmacy of pharmacies) {
+      console.log(
+        `📍 Geocoding: ${pharmacy.pharmacyName} (${pharmacy.address})`
+      );
 
-    const coords = await geocodeAddress(pharmacy.address);
+      const coords = await geocodeAddress(pharmacy.address);
 
-    if (coords) {
-      await db
-        .promise()
-        .query(
+      if (coords) {
+        await queryDb(
           "UPDATE Pharmacy SET latitude = ?, longitude = ? WHERE pharmacy_Id = ?",
           [coords.latitude, coords.longitude, pharmacy.pharmacy_Id]
         );
-      console.log(`✔ Updated coordinates for ${pharmacy.pharmacyName}`);
-    } else {
-      console.log(`❌ Failed to geocode: ${pharmacy.address}`);
+        console.log(`✔ Updated coordinates for ${pharmacy.pharmacyName}`);
+      } else {
+        console.log(`❌ Failed to geocode: ${pharmacy.address}`);
+      }
     }
-  }
 
-  console.log("🎉 Geocoding complete!");
-  process.exit(); // Close script when done
+    console.log("🎉 Geocoding complete!");
+  } catch (error) {
+    console.error("❌ Database error:", error.message);
+  } finally {
+    db.end(); // Close the connection
+    process.exit();
+  }
 }
 
 // Run the script
