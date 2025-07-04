@@ -3,10 +3,10 @@
     padding: 10px;
     text-align: center;
     border-top: 1px solid #ddd;
-    width: calc(100% - 250px); /* Subtract sidebar width */
+    width: calc(100%); /* Subtract sidebar width */
     position: fixed;
     bottom: 0;
-    left: 250px; /* Start after sidebar */
+    /* left: 250px; Start after sidebar */
     height: 40px;
     display: flex;
     align-items: center;

@@ -3,8 +3,17 @@ import 'package:url_launcher/url_launcher.dart';
 
 class PharmacyCard extends StatelessWidget {
   final dynamic pharmacy;
+  final bool isSelecting;
+  final bool isSelected;
+  final VoidCallback? onSelected;
 
-  const PharmacyCard({super.key, required this.pharmacy});
+  const PharmacyCard({
+    super.key,
+    required this.pharmacy,
+    this.isSelecting = false,
+    this.isSelected = false,
+    this.onSelected,
+  });
 
   void _launchWhatsApp(BuildContext context, String phone) async {
     final url = 'https://wa.me/$phone';
@@ -30,10 +39,20 @@ class PharmacyCard extends StatelessWidget {
             Text('${pharmacy['distance'].toStringAsFixed(2)} km away'),
           ],
         ),
-        trailing: IconButton(
-          icon: const Icon(Icons.message),
-          onPressed: () => _launchWhatsApp(context, pharmacy['whatsappNumber']),
-        ),
+        leading: isSelecting
+            ? Checkbox(
+                value: isSelected,
+                onChanged: (val) => onSelected?.call(),
+              )
+            : null,
+        trailing: !isSelecting
+            ? IconButton(
+                icon: const Icon(Icons.message),
+                onPressed: () =>
+                    _launchWhatsApp(context, pharmacy['whatsappNumber']),
+              )
+            : null,
+        onTap: isSelecting ? onSelected : null,
       ),
     );
   }

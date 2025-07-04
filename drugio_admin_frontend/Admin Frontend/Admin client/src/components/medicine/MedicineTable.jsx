@@ -10,7 +10,7 @@ const MedicineTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showAddForm, setShowAddForm] = useState(false);
   const itemsPerPage = 10;
-  const navigate = useNavigate(); // Use navigate hook
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchMedicines();
@@ -21,10 +21,102 @@ const MedicineTable = () => {
     setMedicines(data);
   };
 
-  // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentMedicines = medicines.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(medicines.length / itemsPerPage);
+
+  const renderPagination = () => {
+    const pages = [];
+
+    // Previous button
+    pages.push(
+      <li
+        key="prev"
+        className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+      >
+        <button
+          className="page-link"
+          onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
+        >
+          &lt;
+        </button>
+      </li>
+    );
+
+    // First page
+    pages.push(
+      <li key={1} className={`page-item ${currentPage === 1 ? "active" : ""}`}>
+        <button className="page-link" onClick={() => setCurrentPage(1)}>
+          1
+        </button>
+      </li>
+    );
+
+    // Ellipses if needed
+    if (currentPage > 3) {
+      pages.push(
+        <li key="dots-prev" className="page-item disabled">
+          <span className="page-link">...</span>
+        </li>
+      );
+    }
+
+    // Current page (if not first or last)
+    if (currentPage !== 1 && currentPage !== totalPages) {
+      pages.push(
+        <li key={currentPage} className="page-item active">
+          <button className="page-link">{currentPage}</button>
+        </li>
+      );
+    }
+
+    // Ellipses if needed
+    if (currentPage < totalPages - 2) {
+      pages.push(
+        <li key="dots-next" className="page-item disabled">
+          <span className="page-link">...</span>
+        </li>
+      );
+    }
+
+    // Last page
+    if (totalPages > 1) {
+      pages.push(
+        <li
+          key={totalPages}
+          className={`page-item ${currentPage === totalPages ? "active" : ""}`}
+        >
+          <button
+            className="page-link"
+            onClick={() => setCurrentPage(totalPages)}
+          >
+            {totalPages}
+          </button>
+        </li>
+      );
+    }
+
+    // Next button
+    pages.push(
+      <li
+        key="next"
+        className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}
+      >
+        <button
+          className="page-link"
+          onClick={() =>
+            currentPage < totalPages && setCurrentPage(currentPage + 1)
+          }
+        >
+          &gt;
+        </button>
+      </li>
+    );
+
+    return pages;
+  };
 
   return (
     <div className="container mt-4">
@@ -71,47 +163,8 @@ const MedicineTable = () => {
         </table>
       </div>
 
-      <nav className="d-flex justify-content-center">
-        <ul className="pagination">
-          <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
-            <button
-              className="page-link"
-              onClick={() => setCurrentPage(currentPage - 1)}
-            >
-              Previous
-            </button>
-          </li>
-          {Array.from(
-            { length: Math.ceil(medicines.length / itemsPerPage) },
-            (_, i) => (
-              <li
-                key={i}
-                className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
-              >
-                <button
-                  className="page-link"
-                  onClick={() => setCurrentPage(i + 1)}
-                >
-                  {i + 1}
-                </button>
-              </li>
-            )
-          )}
-          <li
-            className={`page-item ${
-              currentPage === Math.ceil(medicines.length / itemsPerPage)
-                ? "disabled"
-                : ""
-            }`}
-          >
-            <button
-              className="page-link"
-              onClick={() => setCurrentPage(currentPage + 1)}
-            >
-              Next
-            </button>
-          </li>
-        </ul>
+      <nav className="d-flex justify-content-center mt-3">
+        <ul className="pagination">{renderPagination()}</ul>
       </nav>
 
       {showAddForm && (
