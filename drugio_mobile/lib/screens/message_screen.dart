@@ -1,20 +1,107 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class MessageScreen extends StatelessWidget {
+class MessageScreen extends StatefulWidget {
   final List<dynamic> selectedPharmacies;
 
   const MessageScreen({super.key, required this.selectedPharmacies});
 
   @override
+  State<MessageScreen> createState() => _MessageScreenState();
+}
+
+class _MessageScreenState extends State<MessageScreen> {
+  final TextEditingController _controller = TextEditingController();
+  int _currentIndex = 0;
+  bool _isSending = false;
+
+  Future<void> _launchWhatsApp(String phone, String message) async {
+    String formattedPhone = phone.replaceAll(RegExp(r'\s+'), '');
+    if (formattedPhone.startsWith('0')) {
+      formattedPhone = formattedPhone.replaceFirst('0', '94');
+    }
+
+    final url = Uri.parse(
+      'https://wa.me/$formattedPhone?text=${Uri.encodeComponent(message)}',
+    );
+
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not open WhatsApp for $phone')),
+      );
+    }
+  }
+
+  Future<void> sendMessagesSequentially() async {
+    if (_isSending) return;
+
+    final message = _controller.text.trim();
+    if (message.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please type a message')));
+      return;
+    }
+
+    setState(() {
+      _isSending = true;
+    });
+
+    for (int i = _currentIndex; i < widget.selectedPharmacies.length; i++) {
+      final pharmacy = widget.selectedPharmacies[i];
+      final phone = pharmacy['whatsappNumber'];
+
+      if (phone != null && phone.toString().trim().isNotEmpty) {
+        await _launchWhatsApp(phone, message);
+
+        setState(() {
+          _currentIndex = i + 1;
+        });
+
+        if (_currentIndex < widget.selectedPharmacies.length) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Message sent to ${pharmacy['pharmacyName']}. Return to app to continue.',
+              ),
+              duration: const Duration(seconds: 5),
+            ),
+          );
+          break; // Exit loop, resume on next press
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('All messages have been sent.'),
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Pharmacy "${pharmacy['pharmacyName']}" has no WhatsApp number.',
+            ),
+          ),
+        );
+      }
+    }
+
+    setState(() {
+      _isSending = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final isBulk = selectedPharmacies.length > 1;
+    final isBulk = widget.selectedPharmacies.length > 1;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
           isBulk
-              ? 'Contact ${selectedPharmacies.length} Pharmacies'
-              : 'Contact ${selectedPharmacies[0]['pharmacyName']}',
+              ? 'Contact ${widget.selectedPharmacies.length} Pharmacies'
+              : 'Contact ${widget.selectedPharmacies[0]['pharmacyName']}',
         ),
       ),
       body: Padding(
@@ -24,6 +111,7 @@ class MessageScreen extends StatelessWidget {
             const Text('Write a message to check availability:'),
             const SizedBox(height: 16),
             TextField(
+              controller: _controller,
               maxLines: 4,
               decoration: const InputDecoration(
                 hintText: 'Enter message...',
@@ -32,12 +120,15 @@ class MessageScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             ElevatedButton.icon(
-              onPressed: () {
-                // here you would call WhatsApp bulk send
-                // or loop over the pharmacies and open individual chats
-              },
+              onPressed: sendMessagesSequentially,
               icon: const Icon(Icons.send),
-              label: Text(isBulk ? 'Send Bulk Message' : 'Send Message'),
+              label: Text(
+                isBulk
+                    ? (_currentIndex >= widget.selectedPharmacies.length
+                          ? 'All Sent'
+                          : 'Send Bulk Message (${_currentIndex + 1}/${widget.selectedPharmacies.length})')
+                    : 'Send Message',
+              ),
             ),
           ],
         ),

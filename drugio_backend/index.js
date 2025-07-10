@@ -17,6 +17,6 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/manufacturers", manufacturerRoutes);
 app.use("/api/distributors", distributorRoutes);
 
-app.listen(3030, () => {
-  console.log("Server running on port 3030");
-});
+app.listen(3030, "0.0.0.0", () =>
+  console.log("Server running on 0.0.0.0:3030")
+);

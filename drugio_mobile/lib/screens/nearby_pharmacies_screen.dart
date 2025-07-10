@@ -99,6 +99,10 @@ class _NearbyPharmaciesScreenState extends State<NearbyPharmaciesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // DEBUG: print the current state to console
+    print(
+      'DEBUG: isLoading=$isLoading, pharmacies=${pharmacies.length}, errorMessage=$errorMessage',
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nearby Pharmacies'),
@@ -108,7 +112,7 @@ class _NearbyPharmaciesScreenState extends State<NearbyPharmaciesScreen> {
               onPressed: toggleSelecting,
               child: Text(
                 isSelecting ? 'Cancel' : 'Select',
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.blue),
               ),
             ),
         ],

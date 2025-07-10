@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class MedicineService {
+  // static const String baseUrl =
+  //     "http://10.0.2.2:3030/api/medicines"; // 10.0.2.2 for emulator
+  // static const String baseUrl = "http://localhost:3030/api/medicines"; // for local host
   static const String baseUrl =
-      "http://10.0.2.2:3030/api/medicines"; // 10.0.2.2 for emulator
-  // static const String baseUrl = "http://localhost:3030/api/medicines";
+      "http://192.168.8.144:3030/api/medicines"; // replace with your PC’s real LAN IP when testing on a real phone
 
   static Future<List<dynamic>> searchMedicines(
     String query,
