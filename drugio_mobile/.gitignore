@@ -41,3 +41,5 @@ gradlew.bat
 *.iml
 *.log
 *.lock
+
+android/app/google-services.json
