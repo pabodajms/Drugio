@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screens/nearby_pharmacies_screen.dart';
+import '../screens/upload_prescription_screen.dart';
 
 class HomeButtons extends StatelessWidget {
   const HomeButtons({super.key});
@@ -45,7 +46,14 @@ class HomeButtons extends StatelessWidget {
             "Read Rx",
             style: TextStyle(color: Colors.black, fontSize: 18),
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const UploadPrescriptionScreen(),
+              ),
+            );
+          },
         ),
       ],
     );

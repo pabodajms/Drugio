@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:drugio_mobile/screens/home_screen.dart';
 import 'package:drugio_mobile/services/auth_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class PharmacistRegisterScreen extends StatefulWidget {
   const PharmacistRegisterScreen({super.key});
@@ -24,12 +25,15 @@ class _PharmacistRegisterScreenState extends State<PharmacistRegisterScreen> {
         UserCredential user = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
 
+        // Get actual FCM token
+        String? fcmToken = await FirebaseMessaging.instance.getToken();
+
         await AuthService.registerPharmacist({
           "name": name,
           "email": email,
           "firebase_uid": user.user!.uid,
           "contact_number": contact,
-          "fcm_token": "sample_fcm_token", // replace with real FCM token
+          "fcm_token": fcmToken,
         });
 
         Navigator.pushReplacement(
