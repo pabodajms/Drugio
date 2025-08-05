@@ -32,3 +32,15 @@ export const getPharmacistByFirebaseUid = (firebase_uid) => {
     });
   });
 };
+
+export const updatePharmacistToken = (firebase_uid, fcm_token) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      UPDATE pharmacist SET fcm_token = ? WHERE firebase_uid = ?
+    `;
+    db.query(query, [fcm_token, firebase_uid], (err, result) => {
+      if (err) return reject(err);
+      resolve(result);
+    });
+  });
+};

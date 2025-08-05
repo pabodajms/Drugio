@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:drugio_mobile/screens/home_screen.dart';
 import 'package:drugio_mobile/services/auth_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:drugio_mobile/screens/pharmacist_login_screen.dart';
 
 class PharmacistRegisterScreen extends StatefulWidget {
   const PharmacistRegisterScreen({super.key});
@@ -42,6 +43,12 @@ class _PharmacistRegisterScreenState extends State<PharmacistRegisterScreen> {
         );
       } catch (e) {
         print("Pharmacist registration error: $e");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Registration failed. Try again."),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
   }
@@ -81,6 +88,18 @@ class _PharmacistRegisterScreenState extends State<PharmacistRegisterScreen> {
               ElevatedButton(
                 onPressed: handleRegister,
                 child: const Text("Register"),
+              ),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const PharmacistLoginScreen(),
+                    ),
+                  );
+                },
+                child: const Text("Already have an account? Login here"),
               ),
             ],
           ),

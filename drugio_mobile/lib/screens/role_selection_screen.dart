@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:drugio_mobile/screens/home_screen.dart';
 import 'package:drugio_mobile/screens/pharmacist_register_screen.dart';
 import 'package:drugio_mobile/services/auth_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class RoleSelectionScreen extends StatelessWidget {
   const RoleSelectionScreen({super.key});
@@ -13,15 +14,19 @@ class RoleSelectionScreen extends StatelessWidget {
       final user = userCredential.user;
 
       if (user != null) {
-        await AuthService.registerAnonymousUser(
-          user.uid,
-          "sample_fcm_token", // 🔁 Replace with actual FCM token later
-        );
+        // Get the actual FCM token
+        final fcmToken = await FirebaseMessaging.instance.getToken();
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
+        if (fcmToken != null) {
+          await AuthService.registerAnonymousUser(user.uid, fcmToken);
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const HomeScreen()),
+          );
+        } else {
+          throw Exception("Failed to get FCM token");
+        }
       }
     } catch (e) {
       print("Anonymous login error: $e");
