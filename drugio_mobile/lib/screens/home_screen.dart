@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/search_box.dart';
 import '../widgets/home_buttons.dart';
 import '../screens/notification_list_screen.dart';
+import '../screens/user_notifications_screen.dart'; // You'll create this
 import '../services/prescription_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,13 +14,38 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _notificationCount = 0;
   final PrescriptionService _prescriptionService = PrescriptionService();
+  int _notificationCount = 0;
+  String? _userRole;
 
   @override
   void initState() {
     super.initState();
-    _fetchPrescriptionCount();
+    _initUserRole();
+  }
+
+  Future<void> _initUserRole() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      final role = await _prescriptionService.getUserRole(user.uid);
+
+      setState(() {
+        _userRole = role;
+      });
+
+      if (role == 'pharmacist') {
+        _fetchPrescriptionCount();
+      } else {
+        _notificationCount = 0;
+      }
+    } catch (e) {
+      debugPrint("Failed to fetch user role: $e");
+      setState(() {
+        _userRole = "unknown";
+      });
+    }
   }
 
   Future<void> _fetchPrescriptionCount() async {
@@ -32,6 +59,24 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _onNotificationPressed() {
+    if (_userRole == 'pharmacist') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const NotificationListScreen()),
+      );
+    } else if (_userRole == 'user') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const UserNotificationsScreen()),
+      );
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Unknown user role")));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,14 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               IconButton(
                 icon: const Icon(Icons.notifications),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const NotificationListScreen(),
-                    ),
-                  );
-                },
+                onPressed: _onNotificationPressed,
               ),
               if (_notificationCount > 0)
                 Positioned(

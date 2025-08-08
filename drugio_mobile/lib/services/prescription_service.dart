@@ -85,4 +85,32 @@ class PrescriptionService {
 
     return response.statusCode == 201 || response.statusCode == 200;
   }
+
+  Future<String?> getUserRole(String firebaseUid) async {
+    final url = Uri.parse(
+      '$backendBaseUrl/api/prescriptions/role/$firebaseUid',
+    );
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['role']; // 'pharmacist' or 'user'
+    } else {
+      return null;
+    }
+  }
+
+  Future<List<dynamic>> getUserPrescriptionsWithResponses(
+    String firebaseUid,
+  ) async {
+    final response = await http.get(
+      Uri.parse('$backendBaseUrl/api/prescriptions/user/$firebaseUid'),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load prescriptions with responses');
+    }
+  }
 }

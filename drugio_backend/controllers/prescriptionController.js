@@ -86,3 +86,39 @@ export const respondToPrescription = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const handleGetUserRole = async (req, res) => {
+  const { firebase_uid } = req.params;
+
+  try {
+    const role = await prescriptionService.getUserRoleByFirebaseUid(
+      firebase_uid
+    );
+    res.status(role === "unknown" ? 404 : 200).json({ role });
+  } catch (error) {
+    console.error("Error in role check:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getPrescriptionsByFirebaseUid = async (req, res) => {
+  const { firebase_uid } = req.params;
+
+  try {
+    const numericId = await prescriptionService.getUserIdFromFirebaseUid(
+      firebase_uid
+    );
+    if (!numericId) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const prescriptions =
+      await prescriptionService.getPrescriptionsWithResponsesByUserId(
+        numericId
+      );
+    res.status(200).json(prescriptions);
+  } catch (error) {
+    console.error("Error fetching prescriptions with responses:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
