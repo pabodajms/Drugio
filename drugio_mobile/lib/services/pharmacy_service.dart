@@ -6,8 +6,7 @@ class PharmacyService {
   //     "http://10.0.2.2:3030/api/pharmacies"; // 10.0.2.2 for emulator
   // static const String baseUrl =
   //     "http://localhost:3030/api/pharmacies"; // Use this for local testing
-  static const String baseUrl =
-      "http://192.168.8.144:3030/api/pharmacies"; // replace with your PC’s real LAN IP when testing on a real phone
+  static const String baseUrl = "http://192.168.8.144:3030/api/pharmacies";
 
   static Future<List<dynamic>> getNearbyPharmacies(
     double lat,

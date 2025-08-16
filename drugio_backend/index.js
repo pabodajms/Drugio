@@ -8,6 +8,7 @@ import distributorRoutes from "./routes/distributorRoutes.js";
 import pharmacistRoutes from "./routes/pharmacistRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import prescriptionRoutes from "./routes/prescriptionRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 import db from "./config/db.js";
 
 const app = express();
@@ -22,6 +23,7 @@ app.use("/api/distributors", distributorRoutes);
 app.use("/api/pharmacists", pharmacistRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/prescriptions", prescriptionRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 app.listen(3030, "0.0.0.0", () =>
   console.log("Server running on 0.0.0.0:3030")

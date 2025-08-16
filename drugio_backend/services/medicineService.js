@@ -349,62 +349,6 @@ export const deleteMedicine = async (medicineId) => {
   });
 };
 
-// export const searchMedicines = async (filterType, searchTerm) => {
-//   return new Promise((resolve, reject) => {
-//     let sql = "";
-//     let params = [];
-
-//     if (filterType === "generic") {
-//       // get only matching generics
-//       sql = `
-//         SELECT
-//           generic_Id,
-//           genericName
-//         FROM generic
-//         WHERE genericName LIKE ?
-//       `;
-//       params.push(`%${searchTerm}%`);
-//     } else if (filterType === "brand") {
-//       // get only matching brands
-//       sql = `
-//         SELECT
-//           b.brand_Id,
-//           b.brandName,
-//           g.genericName
-//         FROM brand b
-//         JOIN generic g ON b.generic_Id = g.generic_Id
-//         WHERE b.brandName LIKE ?
-//       `;
-//       params.push(`%${searchTerm}%`);
-//     } else {
-//       // get everything
-//       sql = `
-//         SELECT
-//           m.*,
-//           b.brandName,
-//           g.genericName,
-//           man.manufacturer_Name AS manufacturerName,
-//           man.manufactured_Country,
-//           dist.distributor_Name AS distributorName,
-//           dist.contact_Number AS distributorContact,
-//           dist.address AS distributorAddress
-//         FROM medicine m
-//         JOIN brand b ON m.brand_Id = b.brand_Id
-//         JOIN generic g ON b.generic_Id = g.generic_Id
-//         LEFT JOIN manufacturer man ON m.manufacturer_Id = man.manufacturer_Id
-//         LEFT JOIN local_distributor dist ON m.localDistributor_Id = dist.localDistributor_Id
-//         WHERE b.brandName LIKE ? OR g.genericName LIKE ?
-//       `;
-//       params.push(`%${searchTerm}%`, `%${searchTerm}%`);
-//     }
-
-//     db.query(sql, params, (err, results) => {
-//       if (err) reject(err);
-//       else resolve(results);
-//     });
-//   });
-// };
-
 export const searchMedicines = async (filterType, searchTerm) => {
   return new Promise((resolve, reject) => {
     let sql = "";

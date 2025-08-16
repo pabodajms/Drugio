@@ -172,3 +172,93 @@ export const getPrescriptionsWithResponsesByUserId = (user_Id) => {
     });
   });
 };
+
+// Get prescription monitoring data for admin/web
+export const getPrescriptionMonitoring = () => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT 
+        p.prescription_Id,
+        p.uploaded_at,
+        p.user_Id,
+        COUNT(r.response_Id) AS response_count,
+        CASE 
+          WHEN COUNT(r.response_Id) > 0 THEN 'Responded'
+          ELSE 'Pending'
+        END AS status
+      FROM prescriptions p
+      LEFT JOIN prescription_response r 
+        ON p.prescription_Id = r.prescription_Id
+      GROUP BY p.prescription_Id
+      ORDER BY p.uploaded_at DESC
+    `;
+
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error("Error fetching prescription monitoring data:", err);
+        return reject(err);
+      }
+      resolve(results);
+    });
+  });
+};
+
+// Get prescription details by prescription_Id
+export const getPrescriptionDetails = (prescription_Id) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT 
+        p.prescription_Id,
+        p.user_Id,
+        p.image_url,
+        p.comment,
+        p.uploaded_at,
+        r.response_Id,
+        r.suggested_medicines,
+        r.directions,
+        r.pharmacist_comment,
+        r.created_at AS response_date,
+        ph.name AS pharmacist_name
+      FROM prescriptions p
+      LEFT JOIN prescription_response r 
+        ON p.prescription_Id = r.prescription_Id
+      LEFT JOIN pharmacist ph 
+        ON r.pharmacist_Id = ph.pharmacist_Id
+      WHERE p.prescription_Id = ?
+      ORDER BY r.created_at DESC
+    `;
+
+    db.query(query, [prescription_Id], (err, results) => {
+      if (err) {
+        console.error("Error fetching prescription details:", err);
+        return reject(err);
+      }
+
+      if (results.length === 0) return resolve(null);
+
+      const prescription = {
+        prescription_Id: results[0].prescription_Id,
+        user_Id: results[0].user_Id,
+        image_url: results[0].image_url,
+        comment: results[0].comment,
+        uploaded_at: results[0].uploaded_at,
+        responses: [],
+      };
+
+      results.forEach((row) => {
+        if (row.response_Id) {
+          prescription.responses.push({
+            response_Id: row.response_Id,
+            pharmacist_name: row.pharmacist_name,
+            suggested_medicines: row.suggested_medicines,
+            directions: row.directions,
+            pharmacist_comment: row.pharmacist_comment,
+            response_date: row.response_date,
+          });
+        }
+      });
+
+      resolve(prescription);
+    });
+  });
+};

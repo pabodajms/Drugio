@@ -15,15 +15,15 @@ import MedicineTable from "./components/medicine/MedicineTable";
 import MedicineDetails from "./components/medicine/MedicineDetails";
 import AddMedicinePage from "./components/medicine/AddMedicinePage";
 import UpdateMedicineForm from "./components/medicine/UpdateMedicineForm";
-import PharmacyTable from "./components/pharmacy/PharmacyTable"; // Import PharmacyTable
-import PharmacyDetails from "./components/pharmacy/PharmacyDetails"; // Import PharmacyDetails
+import PharmacyTable from "./components/pharmacy/PharmacyTable";
+import PharmacyDetails from "./components/pharmacy/PharmacyDetails";
 import AddPharmacy from "./components/pharmacy/AddPharmacy";
 import UpdatePharmacy from "./components/pharmacy/UpdatePharmacy";
+import DashboardPage from "./components/dashboard/DashboardPage";
+import PrescriptionMonitoringTable from "./components/prescriptions/PrescriptionMonitoringTable";
+import PrescriptionDetailsPage from "./components/prescriptions/PrescriptionDetailsPage";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const Dashboard = () => <div></div>;
-const Manufacturers = () => <div></div>;
-const LocalDistributors = () => <div></div>;
 const Settings = () => <div></div>;
 
 function Layout() {
@@ -36,12 +36,11 @@ function Layout() {
       <div className="flex-grow-1">
         {!hideSidebarRoutes.includes(location.pathname) && <Header />}
         <div className="container mt-5">
-          {/* Added Bootstrap margin to prevent overlap */}
           <Routes>
             <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/admin-dashboard" element={<Dashboard />} />
+            <Route path="/admin-dashboard" element={<DashboardPage />} />
             <Route path="/medicines" element={<MedicineTable />} />
             <Route
               path="/medicine/medicinedetails/:id"
@@ -58,12 +57,15 @@ function Layout() {
               element={<PharmacyDetails />}
             />
             <Route path="/pharmacy/add" element={<AddPharmacy />} />
+            <Route path="/pharmacy/update/:id" element={<UpdatePharmacy />} />
             <Route
-              path="/pharmacy/update/:id"
-              element={<UpdatePharmacy />} // Added route for update page
+              path="/prescriptions"
+              element={<PrescriptionMonitoringTable />}
             />
-            <Route path="/manufacturers" element={<Manufacturers />} />
-            <Route path="/local-distributors" element={<LocalDistributors />} />
+            <Route
+              path="/prescriptions/:id"
+              element={<PrescriptionDetailsPage />}
+            />
             <Route path="/settings" element={<Settings />} />
           </Routes>
         </div>

@@ -122,3 +122,27 @@ export const getPrescriptionsByFirebaseUid = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const getPrescriptionMonitoring = async (req, res) => {
+  try {
+    const data = await prescriptionService.getPrescriptionMonitoring();
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error fetching monitoring data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getPrescriptionDetails = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const prescription = await prescriptionService.getPrescriptionDetails(id);
+    if (!prescription) {
+      return res.status(404).json({ message: "Prescription not found" });
+    }
+    res.status(200).json(prescription);
+  } catch (error) {
+    console.error("Error fetching prescription details:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
