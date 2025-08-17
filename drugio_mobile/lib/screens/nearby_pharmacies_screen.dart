@@ -3,6 +3,7 @@ import '../services/location_service.dart';
 import '../services/pharmacy_service.dart';
 import '../widgets/pharmacy_card.dart';
 import 'message_screen.dart';
+import 'pharmacy_detail_screen.dart'; // <-- NEW import
 
 class NearbyPharmaciesScreen extends StatefulWidget {
   const NearbyPharmaciesScreen({super.key});
@@ -153,6 +154,19 @@ class _NearbyPharmaciesScreenState extends State<NearbyPharmaciesScreen> {
                         isSelecting: isSelecting,
                         isSelected: selectedPharmacies.contains(pharmacyId),
                         onSelected: () => toggleSelection(pharmacyId),
+                        // NEW: navigate to detail screen when not selecting
+                        onTap: !isSelecting
+                            ? () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => PharmacyDetailScreen(
+                                      pharmacy: pharmacy,
+                                    ),
+                                  ),
+                                );
+                              }
+                            : null,
                       );
                     },
                   ),

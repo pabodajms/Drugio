@@ -6,6 +6,7 @@ class PharmacyCard extends StatelessWidget {
   final bool isSelecting;
   final bool isSelected;
   final VoidCallback? onSelected;
+  final VoidCallback? onTap; // <-- added
 
   const PharmacyCard({
     super.key,
@@ -13,6 +14,7 @@ class PharmacyCard extends StatelessWidget {
     this.isSelecting = false,
     this.isSelected = false,
     this.onSelected,
+    this.onTap, // <-- added
   });
 
   void _launchWhatsApp(BuildContext context, String phone) async {
@@ -52,7 +54,7 @@ class PharmacyCard extends StatelessWidget {
                     _launchWhatsApp(context, pharmacy['whatsappNumber']),
               )
             : null,
-        onTap: isSelecting ? onSelected : null,
+        onTap: onTap ?? (isSelecting ? onSelected : null),
       ),
     );
   }
