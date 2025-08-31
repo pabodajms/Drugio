@@ -44,7 +44,7 @@ const PharmacyDetails = () => {
   }
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-5">
       <button
         className="btn btn-secondary mb-3"
         onClick={() => navigate("/pharmacies")}

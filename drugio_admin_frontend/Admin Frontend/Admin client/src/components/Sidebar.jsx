@@ -80,7 +80,7 @@ const Sidebar = () => {
           {!isCollapsed && <span>Prescriptions</span>}
         </NavLink>
 
-        <NavLink
+        {/* <NavLink
           to="/settings"
           className={({ isActive }) =>
             `d-flex align-items-center px-3 py-2 nav-link ${
@@ -90,7 +90,7 @@ const Sidebar = () => {
         >
           <FaCog className="me-2" size={18} />
           {!isCollapsed && <span>Settings</span>}
-        </NavLink>
+        </NavLink> */}
       </nav>
     </div>
   );

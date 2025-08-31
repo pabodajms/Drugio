@@ -33,7 +33,7 @@ const UpdateMedicineForm = () => {
   if (!formData) return <p className="text-center">Loading...</p>;
 
   return (
-    <form onSubmit={handleSubmit} className="shadow p-4 bg-white rounded">
+    <form onSubmit={handleSubmit} className="shadow p-4 mt-5 bg-white rounded">
       <h3 className="mb-4 text-primary">Update Medicine</h3>
       <div className="row">
         {[

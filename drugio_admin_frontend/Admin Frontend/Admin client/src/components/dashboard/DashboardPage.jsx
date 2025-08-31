@@ -15,18 +15,18 @@ const DashboardPage = () => {
   if (!data) return <p>Loading...</p>;
 
   const chartData = {
-    labels: data.weeklyTrend.map((d) => d.day),
+    labels: data.monthlyTrend.map((item) => item.month),
     datasets: [
       {
         label: "Prescriptions",
-        data: data.weeklyTrend.map((d) => d.count),
-        backgroundColor: "rgba(54, 162, 235, 0.6)",
+        data: data.monthlyTrend.map((item) => item.count),
+        backgroundColor: "rgba(80, 152, 204, 0.6)",
       },
     ],
   };
 
   return (
-    <Container fluid className="p-4">
+    <Container fluid className="p-4 mt-5">
       <DashboardStats stats={data} />
 
       <Row>

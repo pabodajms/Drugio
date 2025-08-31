@@ -30,7 +30,7 @@ const AddPharmacy = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-5">
       <h2>Add Pharmacy</h2>
       {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleSubmit}>

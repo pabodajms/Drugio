@@ -116,7 +116,7 @@ const PharmacyTable = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-5">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 className="m-0">All Pharmacies</h2>
         <button

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../services/prescription_service.dart';
 import 'prescription_detail_screen.dart';
 import 'prescription_responses_screen.dart';
+import '../widgets/footer.dart';
 
 class UserNotificationsScreen extends StatefulWidget {
   const UserNotificationsScreen({super.key});
@@ -86,6 +87,7 @@ class _UserNotificationsScreenState extends State<UserNotificationsScreen> {
                 );
               },
             ),
+      bottomNavigationBar: const Footer(),
     );
   }
 }

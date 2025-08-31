@@ -48,7 +48,7 @@ const UpdatePharmacy = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-5">
       <h2>Update Pharmacy</h2>
       {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleSubmit}>
@@ -105,7 +105,7 @@ const UpdatePharmacy = () => {
         <button
           type="button"
           className="btn btn-secondary ms-2"
-          onClick={() => navigate(`/pharmacy/${id}`)} // Redirect to pharmacy details if canceled
+          onClick={() => navigate(`/pharmacy/pharmacydetails/${id}`)}
         >
           Cancel
         </button>

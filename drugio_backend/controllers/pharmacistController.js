@@ -1,7 +1,18 @@
 import * as pharmacistService from "../services/pharmacistService.js";
 
 export const registerPharmacist = async (req, res) => {
-  const { name, email, firebase_uid, contact_number, fcm_token } = req.body;
+  const {
+    name,
+    registration_number,
+    email,
+    firebase_uid,
+    contact_number,
+    fcm_token,
+  } = req.body;
+
+  if (!registration_number) {
+    return res.status(400).json({ error: "Registration number is required" });
+  }
 
   try {
     const existing = await pharmacistService.getPharmacistByFirebaseUid(
@@ -16,6 +27,7 @@ export const registerPharmacist = async (req, res) => {
 
     const pharmacistId = await pharmacistService.registerPharmacist({
       name,
+      registration_number,
       email,
       firebase_uid,
       contact_number,

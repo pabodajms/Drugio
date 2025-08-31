@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '../screens/message_screen.dart';
 
 class PharmacyCard extends StatelessWidget {
   final dynamic pharmacy;
   final bool isSelecting;
   final bool isSelected;
   final VoidCallback? onSelected;
-  final VoidCallback? onTap; // <-- added
+  final VoidCallback? onTap;
 
   const PharmacyCard({
     super.key,
@@ -14,19 +14,8 @@ class PharmacyCard extends StatelessWidget {
     this.isSelecting = false,
     this.isSelected = false,
     this.onSelected,
-    this.onTap, // <-- added
+    this.onTap,
   });
-
-  void _launchWhatsApp(BuildContext context, String phone) async {
-    final url = 'https://wa.me/$phone';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not launch WhatsApp')),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +38,17 @@ class PharmacyCard extends StatelessWidget {
             : null,
         trailing: !isSelecting
             ? IconButton(
-                icon: const Icon(Icons.message),
-                onPressed: () =>
-                    _launchWhatsApp(context, pharmacy['whatsappNumber']),
+                icon: const Icon(Icons.message, color: Colors.green),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => MessageScreen(
+                        selectedPharmacies: [pharmacy], // pass as list
+                      ),
+                    ),
+                  );
+                },
               )
             : null,
         onTap: onTap ?? (isSelecting ? onSelected : null),

@@ -28,7 +28,7 @@ const PrescriptionDetailsPage = () => {
   if (!prescription) return <p>No details found.</p>;
 
   return (
-    <div>
+    <div className="mt-5 p-4">
       <Button variant="secondary" onClick={() => navigate(-1)} className="mb-3">
         Back
       </Button>

@@ -3,8 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/search_box.dart';
 import '../widgets/home_buttons.dart';
 import '../screens/notification_list_screen.dart';
-import '../screens/user_notifications_screen.dart'; // You'll create this
+import '../screens/user_notifications_screen.dart';
 import '../services/prescription_service.dart';
+import '../widgets/footer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -50,7 +51,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _fetchPrescriptionCount() async {
     try {
-      final prescriptions = await _prescriptionService.getPrescriptions();
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      // fetch pharmacist details using firebase_uid
+      final pharmacist = await _prescriptionService.getPharmacistByFirebaseUid(
+        user.uid,
+      );
+      final pharmacistId = pharmacist['pharmacist_Id'];
+
+      // fetch only unresponded prescriptions
+      final prescriptions = await _prescriptionService
+          .getUnrespondedPrescriptions(pharmacistId.toString());
+
       setState(() {
         _notificationCount = prescriptions.length;
       });
@@ -112,16 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: const [SearchBox(), SizedBox(height: 20), HomeButtons()],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
-        ],
-      ),
+      bottomNavigationBar: const Footer(),
     );
   }
 }

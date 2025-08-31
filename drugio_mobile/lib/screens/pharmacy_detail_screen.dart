@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/pharmacy_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'message_screen.dart';
+import '../widgets/footer.dart';
 
 class PharmacyDetailScreen extends StatefulWidget {
   final dynamic pharmacy;
@@ -29,7 +31,6 @@ class _PharmacyDetailScreenState extends State<PharmacyDetailScreen> {
         widget.pharmacy['longitude'],
       );
 
-      // exclude the current pharmacy
       setState(() {
         otherPharmacies = results
             .where((p) => p['pharmacy_Id'] != widget.pharmacy['pharmacy_Id'])
@@ -40,17 +41,6 @@ class _PharmacyDetailScreenState extends State<PharmacyDetailScreen> {
       setState(() {
         isLoading = false;
       });
-    }
-  }
-
-  void _launchWhatsApp(String phone) async {
-    final url = 'https://wa.me/$phone';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not launch WhatsApp')),
-      );
     }
   }
 
@@ -128,8 +118,16 @@ class _PharmacyDetailScreenState extends State<PharmacyDetailScreen> {
                               FontAwesomeIcons.whatsapp,
                               color: Colors.green,
                             ),
-                            onPressed: () =>
-                                _launchWhatsApp(pharmacy['whatsappNumber']),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => MessageScreen(
+                                    selectedPharmacies: [pharmacy],
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -173,6 +171,7 @@ class _PharmacyDetailScreenState extends State<PharmacyDetailScreen> {
           ),
         ),
       ),
+      bottomNavigationBar: const Footer(),
     );
   }
 }

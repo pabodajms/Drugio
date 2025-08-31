@@ -25,24 +25,6 @@ const DashboardTable = ({ recentActivity, notifications }) => {
           )}
         </Card.Body>
       </Card>
-
-      {/* Notifications */}
-      <Card className="shadow-sm border-0">
-        <Card.Header className="fw-semibold bg-light">
-          Notifications
-        </Card.Header>
-        <Card.Body>
-          {notifications.length > 0 ? (
-            <ul className="mb-0">
-              {notifications.map((note, idx) => (
-                <li key={idx}>{note}</li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-muted">No notifications</p>
-          )}
-        </Card.Body>
-      </Card>
     </>
   );
 };

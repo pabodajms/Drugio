@@ -16,6 +16,7 @@ class PharmacistRegisterScreen extends StatefulWidget {
 class _PharmacistRegisterScreenState extends State<PharmacistRegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   String name = '';
+  String registrationNumber = '';
   String email = '';
   String password = '';
   String contact = '';
@@ -31,6 +32,7 @@ class _PharmacistRegisterScreenState extends State<PharmacistRegisterScreen> {
 
         await AuthService.registerPharmacist({
           "name": name,
+          "registration_number": registrationNumber,
           "email": email,
           "firebase_uid": user.user!.uid,
           "contact_number": contact,
@@ -67,6 +69,14 @@ class _PharmacistRegisterScreenState extends State<PharmacistRegisterScreen> {
                 decoration: const InputDecoration(labelText: "Name"),
                 onChanged: (val) => name = val,
                 validator: (val) => val!.isEmpty ? "Enter name" : null,
+              ),
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: "Registration Number",
+                ),
+                onChanged: (val) => registrationNumber = val,
+                validator: (val) =>
+                    val!.isEmpty ? "Enter registration number" : null,
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: "Email"),

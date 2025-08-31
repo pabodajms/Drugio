@@ -24,7 +24,7 @@ const DashboardChart = ({ chartData }) => {
   return (
     <Card className="shadow-sm border-0">
       <Card.Header className="fw-semibold bg-light">
-        Weekly Prescription Upload Trend
+        Monthly Prescription Upload Trend
       </Card.Header>
       <Card.Body>
         <Bar

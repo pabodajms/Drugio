@@ -2,6 +2,7 @@ import db from "../config/db.js";
 
 export const registerPharmacist = ({
   name,
+  registration_number,
   email,
   firebase_uid,
   contact_number,
@@ -9,12 +10,19 @@ export const registerPharmacist = ({
 }) => {
   return new Promise((resolve, reject) => {
     const query = `
-      INSERT INTO pharmacist (name, email, firebase_uid, contact_number, fcm_token)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO pharmacist (name, registration_number, email, firebase_uid, contact_number, fcm_token)
+      VALUES (?, ?, ?, ?, ?, ?)
     `;
     db.query(
       query,
-      [name, email, firebase_uid, contact_number, fcm_token],
+      [
+        name,
+        registration_number,
+        email,
+        firebase_uid,
+        contact_number,
+        fcm_token,
+      ],
       (err, result) => {
         if (err) return reject(err);
         resolve(result.insertId);

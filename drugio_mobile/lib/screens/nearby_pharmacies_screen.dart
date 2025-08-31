@@ -3,7 +3,7 @@ import '../services/location_service.dart';
 import '../services/pharmacy_service.dart';
 import '../widgets/pharmacy_card.dart';
 import 'message_screen.dart';
-import 'pharmacy_detail_screen.dart'; // <-- NEW import
+import 'pharmacy_detail_screen.dart';
 
 class NearbyPharmaciesScreen extends StatefulWidget {
   const NearbyPharmaciesScreen({super.key});
@@ -100,10 +100,6 @@ class _NearbyPharmaciesScreenState extends State<NearbyPharmaciesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // DEBUG: print the current state to console
-    print(
-      'DEBUG: isLoading=$isLoading, pharmacies=${pharmacies.length}, errorMessage=$errorMessage',
-    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nearby Pharmacies'),
@@ -154,7 +150,7 @@ class _NearbyPharmaciesScreenState extends State<NearbyPharmaciesScreen> {
                         isSelecting: isSelecting,
                         isSelected: selectedPharmacies.contains(pharmacyId),
                         onSelected: () => toggleSelection(pharmacyId),
-                        // NEW: navigate to detail screen when not selecting
+                        // navigate to detail screen when not selecting
                         onTap: !isSelecting
                             ? () {
                                 Navigator.push(

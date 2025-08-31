@@ -146,3 +146,38 @@ export const getPrescriptionDetails = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const getUnrespondedPrescriptionsByPharmacist = async (req, res) => {
+  const { pharmacistId } = req.body;
+
+  try {
+    const prescriptions =
+      await prescriptionService.getUnrespondedPrescriptionsByPharmacist(
+        pharmacistId
+      );
+    res.status(200).json({ prescriptions });
+  } catch (error) {
+    console.error("Error fetching unresponded prescriptions:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getPrescriptionsForPharmacist = async (req, res) => {
+  const { pharmacistId } = req.body;
+
+  if (!pharmacistId) {
+    return res.status(400).json({ message: "pharmacistId is required" });
+  }
+
+  try {
+    const prescriptions =
+      await prescriptionService.getPrescriptionsWithPharmacistStatus(
+        pharmacistId
+      );
+
+    res.status(200).json({ prescriptions });
+  } catch (error) {
+    console.error("Error fetching pharmacist prescriptions:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

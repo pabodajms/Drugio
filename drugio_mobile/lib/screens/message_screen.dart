@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../widgets/footer.dart';
 
 class MessageScreen extends StatefulWidget {
   final List<dynamic> selectedPharmacies;
@@ -133,6 +134,8 @@ class _MessageScreenState extends State<MessageScreen> {
           ],
         ),
       ),
+
+      bottomNavigationBar: const Footer(),
     );
   }
 }

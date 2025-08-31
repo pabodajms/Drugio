@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/prescription_service.dart';
 import 'prescription_detail_screen.dart';
+import '../widgets/footer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationListScreen extends StatefulWidget {
   const NotificationListScreen({super.key});
@@ -21,7 +23,16 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
 
   Future<void> _loadPrescriptions() async {
     try {
-      final prescriptions = await PrescriptionService().getPrescriptions();
+      // ✅ fetch pharmacistId from SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      final pharmacistId = prefs.getInt('pharmacist_Id');
+      if (pharmacistId == null) {
+        throw Exception("Pharmacist ID not found in storage");
+      }
+
+      final prescriptions = await PrescriptionService()
+          .getPrescriptionsForPharmacist(pharmacistId.toString());
+
       setState(() {
         _prescriptions = prescriptions;
         _isLoading = false;
@@ -52,8 +63,15 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                     vertical: 8,
                   ),
                   child: ListTile(
-                    leading: const Icon(Icons.receipt_long),
-                    title: Text("Prescription #${p['prescription_Id']}"),
+                    leading: Icon(
+                      p['has_responded'] == 1
+                          ? Icons.check_circle
+                          : Icons.pending_actions,
+                      color: p['has_responded'] == 1
+                          ? Colors.green
+                          : Colors.orange,
+                    ),
+                    title: Text("Prescription ${p['prescription_Id']}"),
                     subtitle: Text(
                       p['comment']?.toString() ?? "No comment provided",
                       maxLines: 2,
@@ -73,6 +91,7 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                 );
               },
             ),
+      bottomNavigationBar: const Footer(),
     );
   }
 }

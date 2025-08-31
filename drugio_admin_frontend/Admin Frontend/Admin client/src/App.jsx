@@ -35,7 +35,7 @@ function Layout() {
       {!hideSidebarRoutes.includes(location.pathname) && <Sidebar />}
       <div className="flex-grow-1">
         {!hideSidebarRoutes.includes(location.pathname) && <Header />}
-        <div className="container mt-5">
+        <div>
           <Routes>
             <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/signup" element={<SignUp />} />

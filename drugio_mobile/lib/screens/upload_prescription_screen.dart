@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/prescription_service.dart';
+import '../widgets/footer.dart';
 
 class UploadPrescriptionScreen extends StatefulWidget {
   const UploadPrescriptionScreen({super.key});
@@ -121,6 +122,7 @@ class _UploadPrescriptionScreenState extends State<UploadPrescriptionScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: const Footer(),
     );
   }
 }

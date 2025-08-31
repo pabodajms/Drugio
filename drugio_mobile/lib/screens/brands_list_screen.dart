@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/medicine_service.dart';
 import 'medicine_details_screen.dart';
+import '../widgets/footer.dart';
 
 class BrandsListScreen extends StatefulWidget {
   final String genericName;
@@ -89,6 +90,7 @@ class _BrandsListScreenState extends State<BrandsListScreen> {
                 );
               },
             ),
+      bottomNavigationBar: const Footer(),
     );
   }
 }

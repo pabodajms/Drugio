@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/prescription_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/footer.dart';
 
 class PrescriptionDetailScreen extends StatefulWidget {
   final Map prescription;
@@ -90,8 +91,21 @@ class _PrescriptionDetailScreenState extends State<PrescriptionDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (prescription['image_url'] != null)
-              Image.network(prescription['image_url']),
-            const SizedBox(height: 10),
+              Image.network(
+                prescription['image_url'],
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child; // image loaded
+                  return const Center(child: CircularProgressIndicator());
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(
+                    Icons.broken_image,
+                    size: 100,
+                    color: Colors.grey,
+                  );
+                },
+              ),
+            const SizedBox(height: 20),
             Text(
               "User Comment:",
               style: Theme.of(context).textTheme.titleMedium,
@@ -125,6 +139,7 @@ class _PrescriptionDetailScreenState extends State<PrescriptionDetailScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: const Footer(),
     );
   }
 }

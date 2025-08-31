@@ -43,7 +43,7 @@ class HomeButtons extends StatelessWidget {
           ),
           icon: const Icon(Icons.description, color: Colors.black),
           label: const Text(
-            "Read Rx",
+            "Upload Prescriptions",
             style: TextStyle(color: Colors.black, fontSize: 18),
           ),
           onPressed: () {

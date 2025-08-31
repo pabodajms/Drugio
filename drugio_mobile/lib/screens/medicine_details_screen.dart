@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'nearby_pharmacies_screen.dart';
+import '../widgets/footer.dart';
 
 class MedicineDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> medicine;
@@ -82,13 +84,19 @@ class MedicineDetailsScreen extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                // TODO: Implement contact pharmacy
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const NearbyPharmaciesScreen(),
+                  ),
+                );
               },
               child: const Text("Contact Pharmacy"),
             ),
           ],
         ),
       ),
+      bottomNavigationBar: const Footer(),
     );
   }
 

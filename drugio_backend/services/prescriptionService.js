@@ -262,3 +262,52 @@ export const getPrescriptionDetails = (prescription_Id) => {
     });
   });
 };
+
+export const getUnrespondedPrescriptionsByPharmacist = (pharmacistId) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT p.*
+      FROM prescriptions p
+      WHERE NOT EXISTS (
+        SELECT 1 
+        FROM prescription_response r
+        WHERE r.prescription_Id = p.prescription_Id
+          AND r.pharmacist_Id = ?
+      )
+    `;
+    db.query(query, [pharmacistId], (err, results) => {
+      if (err) return reject(err);
+      resolve(results);
+    });
+  });
+};
+
+export const getPrescriptionsWithPharmacistStatus = (pharmacistId) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT 
+        p.*,
+        CASE 
+          WHEN EXISTS (
+            SELECT 1
+            FROM prescription_response r
+            WHERE r.prescription_Id = p.prescription_Id
+              AND r.pharmacist_Id = ?
+          ) THEN 1
+          ELSE 0
+        END AS has_responded
+      FROM prescriptions p
+      ORDER BY p.uploaded_at DESC
+    `;
+    db.query(query, [pharmacistId], (err, results) => {
+      if (err) {
+        console.error(
+          "Error fetching prescriptions with pharmacist status:",
+          err
+        );
+        return reject(err);
+      }
+      resolve(results);
+    });
+  });
+};

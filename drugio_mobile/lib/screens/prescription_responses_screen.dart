@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/footer.dart';
 
 class PrescriptionResponsesScreen extends StatelessWidget {
   final Map prescription;
@@ -132,6 +133,7 @@ class PrescriptionResponsesScreen extends StatelessWidget {
           ),
         ],
       ),
+      bottomNavigationBar: const Footer(),
     );
   }
 }

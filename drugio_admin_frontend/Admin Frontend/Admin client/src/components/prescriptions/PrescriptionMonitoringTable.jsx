@@ -41,7 +41,7 @@ const PrescriptionMonitoringTable = () => {
   };
 
   return (
-    <div>
+    <div className="mt-5 p-4">
       <h2 className="mb-4">Prescription Monitoring</h2>
       <Table striped bordered hover responsive>
         <thead>
