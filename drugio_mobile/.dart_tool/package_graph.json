@@ -70,6 +70,13 @@
       "dependencies": []
     },
     {
+      "name": "font_awesome_flutter",
+      "version": "10.9.0",
+      "dependencies": [
+        "flutter"
+      ]
+    },
+    {
       "name": "shared_preferences",
       "version": "2.5.3",
       "dependencies": [
@@ -1039,13 +1046,6 @@
       "dependencies": [
         "collection",
         "meta"
-      ]
-    },
-    {
-      "name": "font_awesome_flutter",
-      "version": "10.9.0",
-      "dependencies": [
-        "flutter"
       ]
     }
   ],
