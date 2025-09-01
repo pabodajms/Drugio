@@ -8,6 +8,6 @@ import {
 const router = express.Router();
 
 router.get("/dashboard", verifyFirebaseToken, adminDashboard);
-router.post("/signup", registerAdmin); // No token required for signup
+router.post("/signup", registerAdmin);
 
 export default router;

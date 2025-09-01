@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getPharmacies, updatePharmacy } from "../../services/pharmacyServices"; // Assuming updatePharmacy exists
+import { getPharmacies, updatePharmacy } from "../../services/pharmacyServices";
 import { FaPhone, FaWhatsapp } from "react-icons/fa";
 
 const UpdatePharmacy = () => {
@@ -40,15 +40,15 @@ const UpdatePharmacy = () => {
     setError("");
 
     try {
-      await updatePharmacy(id, pharmacy); // Assuming updatePharmacy is implemented
-      navigate(`/pharmacies`); // Redirect to pharmacy details page after update
+      await updatePharmacy(id, pharmacy);
+      navigate(`/pharmacies`);
     } catch (err) {
       setError("Failed to update pharmacy. Please try again.");
     }
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-5">
       <h2>Update Pharmacy</h2>
       {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleSubmit}>
@@ -105,7 +105,7 @@ const UpdatePharmacy = () => {
         <button
           type="button"
           className="btn btn-secondary ms-2"
-          onClick={() => navigate(`/pharmacy/${id}`)} // Redirect to pharmacy details if canceled
+          onClick={() => navigate(`/pharmacy/pharmacydetails/${id}`)}
         >
           Cancel
         </button>

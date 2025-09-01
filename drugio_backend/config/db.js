@@ -17,7 +17,7 @@ db.connect((err) => {
     console.error("Database connection failed:", err.message);
     process.exit(1);
   } else {
-    console.log("✅ Connected to MySQL database");
+    console.log("Connected to MySQL database");
   }
 });
 
@@ -25,7 +25,7 @@ db.connect((err) => {
 db.on("error", (err) => {
   console.error("MySQL error:", err);
   if (err.code === "PROTOCOL_CONNECTION_LOST") {
-    console.error("🔄 Reconnecting to MySQL...");
+    console.error("Reconnecting to MySQL...");
     db.connect();
   } else {
     throw err;

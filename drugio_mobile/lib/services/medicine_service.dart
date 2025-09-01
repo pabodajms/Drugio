@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:drugio_mobile/config/api_config.dart';
 
 class MedicineService {
-  static const String baseUrl =
-      "http://10.0.2.2:3030/api/medicines"; // 10.0.2.2 for emulator
-  // static const String baseUrl = "http://localhost:3030/api/medicines";
+  static final String baseUrl = "${ApiConfig.baseUrl}/api/medicines";
 
   static Future<List<dynamic>> searchMedicines(
     String query,

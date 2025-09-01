@@ -22,9 +22,101 @@ const PharmacyTable = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentPharmacies = pharmacies.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(pharmacies.length / itemsPerPage);
+
+  const renderPagination = () => {
+    const pages = [];
+
+    // Previous button
+    pages.push(
+      <li
+        key="prev"
+        className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+      >
+        <button
+          className="page-link"
+          onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
+        >
+          &lt;
+        </button>
+      </li>
+    );
+
+    // First page
+    pages.push(
+      <li key={1} className={`page-item ${currentPage === 1 ? "active" : ""}`}>
+        <button className="page-link" onClick={() => setCurrentPage(1)}>
+          1
+        </button>
+      </li>
+    );
+
+    // Ellipses before current page
+    if (currentPage > 3) {
+      pages.push(
+        <li key="dots-prev" className="page-item disabled">
+          <span className="page-link">...</span>
+        </li>
+      );
+    }
+
+    // Current page
+    if (currentPage !== 1 && currentPage !== totalPages) {
+      pages.push(
+        <li key={currentPage} className="page-item active">
+          <button className="page-link">{currentPage}</button>
+        </li>
+      );
+    }
+
+    // Ellipses after current page
+    if (currentPage < totalPages - 2) {
+      pages.push(
+        <li key="dots-next" className="page-item disabled">
+          <span className="page-link">...</span>
+        </li>
+      );
+    }
+
+    // Last page
+    if (totalPages > 1) {
+      pages.push(
+        <li
+          key={totalPages}
+          className={`page-item ${currentPage === totalPages ? "active" : ""}`}
+        >
+          <button
+            className="page-link"
+            onClick={() => setCurrentPage(totalPages)}
+          >
+            {totalPages}
+          </button>
+        </li>
+      );
+    }
+
+    // Next button
+    pages.push(
+      <li
+        key="next"
+        className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}
+      >
+        <button
+          className="page-link"
+          onClick={() =>
+            currentPage < totalPages && setCurrentPage(currentPage + 1)
+          }
+        >
+          &gt;
+        </button>
+      </li>
+    );
+
+    return pages;
+  };
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-5">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 className="m-0">All Pharmacies</h2>
         <button
@@ -39,7 +131,6 @@ const PharmacyTable = () => {
         <table className="table table-striped table-bordered table-hover shadow-sm">
           <thead>
             <tr>
-              {/* <th>District</th> */}
               <th>Name</th>
               <th>Address</th>
               <th>Contact</th>
@@ -54,7 +145,6 @@ const PharmacyTable = () => {
                 }
                 style={{ cursor: "pointer" }}
               >
-                {/* <td>{pharmacy.district}</td> */}
                 <td>{pharmacy.pharmacyName}</td>
                 <td>{pharmacy.address}</td>
                 <td>{pharmacy.contactNumber}</td>
@@ -64,47 +154,8 @@ const PharmacyTable = () => {
         </table>
       </div>
 
-      <nav className="d-flex justify-content-center">
-        <ul className="pagination">
-          <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
-            <button
-              className="page-link"
-              onClick={() => setCurrentPage(currentPage - 1)}
-            >
-              Previous
-            </button>
-          </li>
-          {Array.from(
-            { length: Math.ceil(pharmacies.length / itemsPerPage) },
-            (_, i) => (
-              <li
-                key={i}
-                className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
-              >
-                <button
-                  className="page-link"
-                  onClick={() => setCurrentPage(i + 1)}
-                >
-                  {i + 1}
-                </button>
-              </li>
-            )
-          )}
-          <li
-            className={`page-item ${
-              currentPage === Math.ceil(pharmacies.length / itemsPerPage)
-                ? "disabled"
-                : ""
-            }`}
-          >
-            <button
-              className="page-link"
-              onClick={() => setCurrentPage(currentPage + 1)}
-            >
-              Next
-            </button>
-          </li>
-        </ul>
+      <nav className="d-flex justify-content-center mt-3">
+        <ul className="pagination">{renderPagination()}</ul>
       </nav>
     </div>
   );

@@ -1,0 +1,10 @@
+import express from "express";
+import { handleUserRegistration } from "../controllers/userController.js";
+
+const router = express.Router();
+
+router.post("/register", (req, res, next) => {
+  return handleUserRegistration(req, res, next);
+});
+
+export default router;

@@ -16,12 +16,12 @@ const AddMedicineForm = () => {
     typeOfDrug: "",
     packageType: "",
     temperature: "",
-    specialAdvice: "",
-    manufacturer_Name: "",
+    coat: "",
+    manufacturerName: "",
     manufactured_Country: "",
-    distributor_Name: "",
-    contact_Number: "",
-    address: "",
+    localDistributorName: "",
+    localDistributorContact: "",
+    localDistributorAddress: "",
   });
 
   const handleChange = (e) =>
@@ -31,7 +31,7 @@ const AddMedicineForm = () => {
     e.preventDefault();
     try {
       await addMedicine(formData);
-      navigate("/medicine"); // Go back to table after adding
+      navigate("/medicines");
     } catch (error) {
       console.error("Error adding medicine:", error);
     }
@@ -146,12 +146,12 @@ const AddMedicineForm = () => {
         </div>
 
         <div className="col-md-12 mb-3">
-          <label>Special Advice</label>
+          <label>Coat</label>
           <input
             type="text"
             className="form-control"
-            name="specialAdvice"
-            value={formData.specialAdvice}
+            name="coat"
+            value={formData.coat}
             onChange={handleChange}
           />
         </div>
@@ -164,8 +164,8 @@ const AddMedicineForm = () => {
           <input
             type="text"
             className="form-control"
-            name="manufacturer_Name"
-            value={formData.manufacturer_Name}
+            name="manufacturerName"
+            value={formData.manufacturerName}
             onChange={handleChange}
           />
         </div>
@@ -188,8 +188,8 @@ const AddMedicineForm = () => {
           <input
             type="text"
             className="form-control"
-            name="distributor_Name"
-            value={formData.distributor_Name}
+            name="localDistributorName"
+            value={formData.localDistributorName}
             onChange={handleChange}
           />
         </div>
@@ -198,8 +198,8 @@ const AddMedicineForm = () => {
           <input
             type="text"
             className="form-control"
-            name="contact_Number"
-            value={formData.contact_Number}
+            name="localDistributorContact"
+            value={formData.localDistributorContact}
             onChange={handleChange}
           />
         </div>
@@ -208,8 +208,8 @@ const AddMedicineForm = () => {
           <input
             type="text"
             className="form-control"
-            name="address"
-            value={formData.address}
+            name="localDistributorAddress"
+            value={formData.localDistributorAddress}
             onChange={handleChange}
           />
         </div>

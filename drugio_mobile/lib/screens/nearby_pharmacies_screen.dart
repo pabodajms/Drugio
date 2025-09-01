@@ -1,79 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:url_launcher/url_launcher.dart';
+import '../services/location_service.dart';
+import '../services/pharmacy_service.dart';
+import '../widgets/pharmacy_card.dart';
+import 'message_screen.dart';
+import 'pharmacy_detail_screen.dart';
 
 class NearbyPharmaciesScreen extends StatefulWidget {
   const NearbyPharmaciesScreen({super.key});
 
   @override
-  _NearbyPharmaciesScreenState createState() => _NearbyPharmaciesScreenState();
+  State<NearbyPharmaciesScreen> createState() => _NearbyPharmaciesScreenState();
 }
 
 class _NearbyPharmaciesScreenState extends State<NearbyPharmaciesScreen> {
   List<dynamic> pharmacies = [];
   bool isLoading = true;
   String errorMessage = '';
-  Position? currentPosition;
+  bool isSelecting = false;
+  Set<int> selectedPharmacies = {};
 
   @override
   void initState() {
     super.initState();
-    _requestLocationPermission();
+    _loadNearbyPharmacies();
   }
 
-  Future<void> _requestLocationPermission() async {
-    final status = await Permission.location.request();
-    if (status.isGranted) {
-      _getCurrentLocation();
-    } else {
-      setState(() {
-        isLoading = false;
-        errorMessage = 'Location permission denied';
-      });
-    }
-  }
-
-  Future<void> _getCurrentLocation() async {
+  Future<void> _loadNearbyPharmacies() async {
     try {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
+      final position = await LocationService.getCurrentPosition();
 
-      setState(() {
-        currentPosition = position;
-      });
-
-      _fetchNearbyPharmacies(position.latitude, position.longitude);
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-        errorMessage = 'Could not get location: $e';
-      });
-    }
-  }
-
-  Future<void> _fetchNearbyPharmacies(double lat, double lng) async {
-    try {
-      final response = await http.get(
-        Uri.parse(
-          'http://your-backend-url/api/pharmacies/nearby?lat=$lat&lng=$lng&radius=5',
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        setState(() {
-          pharmacies = json.decode(response.body);
-          isLoading = false;
-        });
-      } else {
+      if (position == null) {
         setState(() {
           isLoading = false;
-          errorMessage = 'Failed to load pharmacies';
+          errorMessage = "Location permission denied.";
         });
+        return;
       }
+
+      final results = await PharmacyService.getNearbyPharmacies(
+        position.latitude,
+        position.longitude,
+      );
+
+      setState(() {
+        pharmacies = results;
+        isLoading = false;
+      });
     } catch (e) {
       setState(() {
         isLoading = false;
@@ -82,53 +54,135 @@ class _NearbyPharmaciesScreenState extends State<NearbyPharmaciesScreen> {
     }
   }
 
-  Future<void> _launchWhatsApp(String phone) async {
-    final url = 'https://wa.me/$phone';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not launch WhatsApp')),
-      );
-    }
+  void toggleSelecting() {
+    setState(() {
+      isSelecting = !isSelecting;
+      if (!isSelecting) {
+        selectedPharmacies.clear();
+      }
+    });
+  }
+
+  void toggleSelection(int pharmacyId) {
+    setState(() {
+      if (selectedPharmacies.contains(pharmacyId)) {
+        selectedPharmacies.remove(pharmacyId);
+      } else {
+        selectedPharmacies.add(pharmacyId);
+      }
+    });
+  }
+
+  void selectAll() {
+    setState(() {
+      if (selectedPharmacies.length == pharmacies.length) {
+        selectedPharmacies.clear();
+      } else {
+        selectedPharmacies = pharmacies
+            .map<int>((p) => p['pharmacy_Id'] as int)
+            .toSet();
+      }
+    });
+  }
+
+  void goToMessageScreen() {
+    final selected = pharmacies
+        .where((p) => selectedPharmacies.contains(p['pharmacy_Id']))
+        .toList();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MessageScreen(selectedPharmacies: selected),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Nearby Pharmacies')),
+      appBar: AppBar(
+        title: const Text('Nearby Pharmacies'),
+        actions: [
+          if (!isLoading && pharmacies.isNotEmpty)
+            TextButton(
+              onPressed: toggleSelecting,
+              child: Text(
+                isSelecting ? 'Cancel' : 'Select',
+                style: const TextStyle(color: Colors.blue),
+              ),
+            ),
+        ],
+      ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : errorMessage.isNotEmpty
           ? Center(child: Text(errorMessage))
           : pharmacies.isEmpty
           ? const Center(child: Text('No nearby pharmacies found'))
-          : ListView.builder(
-              itemCount: pharmacies.length,
-              itemBuilder: (context, index) {
-                final pharmacy = pharmacies[index];
-                return Card(
-                  margin: const EdgeInsets.all(8),
-                  child: ListTile(
-                    title: Text(pharmacy['pharmacyName']),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+          : Column(
+              children: [
+                if (isSelecting)
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
                       children: [
-                        Text(pharmacy['address']),
-                        Text(
-                          '${pharmacy['distance'].toStringAsFixed(2)} km away',
+                        ElevatedButton(
+                          onPressed: selectAll,
+                          child: Text(
+                            selectedPharmacies.length == pharmacies.length
+                                ? 'Unselect All'
+                                : 'Select All',
+                          ),
                         ),
                       ],
                     ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.message),
-                      onPressed: () =>
-                          _launchWhatsApp(pharmacy['whatsappNumber']),
-                    ),
                   ),
-                );
-              },
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: pharmacies.length,
+                    itemBuilder: (context, index) {
+                      final pharmacy = pharmacies[index];
+                      final pharmacyId = pharmacy['pharmacy_Id'];
+
+                      return PharmacyCard(
+                        pharmacy: pharmacy,
+                        isSelecting: isSelecting,
+                        isSelected: selectedPharmacies.contains(pharmacyId),
+                        onSelected: () => toggleSelection(pharmacyId),
+                        // navigate to detail screen when not selecting
+                        onTap: !isSelecting
+                            ? () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => PharmacyDetailScreen(
+                                      pharmacy: pharmacy,
+                                    ),
+                                  ),
+                                );
+                              }
+                            : null,
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
+      bottomNavigationBar: isSelecting && selectedPharmacies.isNotEmpty
+          ? Padding(
+              padding: const EdgeInsets.all(8),
+              child: ElevatedButton.icon(
+                onPressed: goToMessageScreen,
+                icon: const Icon(Icons.message),
+                label: Text(
+                  selectedPharmacies.length == 1
+                      ? 'Send Message'
+                      : 'Send Bulk Message',
+                ),
+              ),
+            )
+          : null,
     );
   }
 }

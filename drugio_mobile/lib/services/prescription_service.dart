@@ -1,0 +1,170 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:drugio_mobile/config/api_config.dart';
+
+class PrescriptionService {
+  final String backendBaseUrl = ApiConfig.baseUrl;
+
+  // Uploads the image to Firebase Storage and returns the download URL
+  Future<String> uploadImageToFirebase(File imageFile) async {
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    final storageRef = FirebaseStorage.instance.ref().child(
+      "prescriptions/$fileName",
+    );
+
+    final uploadTask = await storageRef.putFile(imageFile);
+    final downloadUrl = await uploadTask.ref.getDownloadURL();
+    return downloadUrl;
+  }
+
+  // Sends prescription metadata to the backend
+  Future<bool> sendPrescriptionToBackend({
+    required String imageUrl,
+    required String? userId,
+    String? comment,
+  }) async {
+    final url = Uri.parse('$backendBaseUrl/api/prescriptions/upload');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'user_Id': userId,
+        'image_url': imageUrl,
+        'comment': comment ?? '',
+      }),
+    );
+
+    print("Backend response: ${response.statusCode} - ${response.body}");
+
+    return response.statusCode == 200 || response.statusCode == 201;
+  }
+
+  // Fetches all uploaded prescriptions from backend
+  Future<List<dynamic>> getPrescriptions() async {
+    final response = await http.get(
+      Uri.parse('$backendBaseUrl/api/prescriptions'),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load prescriptions');
+    }
+  }
+
+  // Sends a pharmacist's response to a specific prescription
+  Future<bool> submitPharmacistResponse({
+    required int prescriptionId,
+    required int pharmacistId,
+    required String suggestedMedicines,
+    required String directions,
+    required String pharmacistComment,
+  }) async {
+    final url = Uri.parse('$backendBaseUrl/api/prescriptions/respond');
+
+    final body = jsonEncode({
+      'prescription_Id': prescriptionId,
+      'pharmacist_Id': pharmacistId,
+      'suggested_medicines': suggestedMedicines,
+      'directions': directions,
+      'pharmacist_comment': pharmacistComment,
+    });
+
+    print("Sending POST to $url with body: $body");
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: body,
+    );
+
+    print("Backend status: ${response.statusCode}");
+    print("Backend response body: ${response.body}");
+
+    return response.statusCode == 201 || response.statusCode == 200;
+  }
+
+  Future<String?> getUserRole(String firebaseUid) async {
+    final url = Uri.parse(
+      '$backendBaseUrl/api/prescriptions/role/$firebaseUid',
+    );
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['role']; // 'pharmacist' or 'user'
+    } else {
+      return null;
+    }
+  }
+
+  Future<List<dynamic>> getUserPrescriptionsWithResponses(
+    String firebaseUid,
+  ) async {
+    final response = await http.get(
+      Uri.parse('$backendBaseUrl/api/prescriptions/user/$firebaseUid'),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load prescriptions with responses');
+    }
+  }
+
+  Future<List<dynamic>> getUnrespondedPrescriptions(String pharmacistId) async {
+    final response = await http.post(
+      Uri.parse("$backendBaseUrl/api/prescriptions/unresponded"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({"pharmacistId": pharmacistId}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['prescriptions'];
+    } else {
+      throw Exception("Failed to fetch unresponded prescriptions");
+    }
+  }
+
+  Future<Map<String, dynamic>> getPharmacistByFirebaseUid(
+    String firebaseUid,
+  ) async {
+    final url = Uri.parse(
+      "$backendBaseUrl/api/pharmacists/get-by-firebase-uid",
+    );
+
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({"firebase_uid": firebaseUid}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['pharmacist'];
+    } else {
+      throw Exception("Failed to fetch pharmacist by Firebase UID");
+    }
+  }
+
+  Future<List<dynamic>> getPrescriptionsForPharmacist(
+    String pharmacistId,
+  ) async {
+    final response = await http.post(
+      Uri.parse("$backendBaseUrl/api/prescriptions/for-pharmacist"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({"pharmacistId": pharmacistId}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['prescriptions'];
+    } else {
+      throw Exception("Failed to fetch pharmacist prescriptions");
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getPharmacies, deletePharmacy } from "../../services/pharmacyServices"; // Import deletePharmacy
+import { getPharmacies, deletePharmacy } from "../../services/pharmacyServices";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaPhone, FaWhatsapp } from "react-icons/fa";
 
@@ -44,7 +44,7 @@ const PharmacyDetails = () => {
   }
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-5">
       <button
         className="btn btn-secondary mb-3"
         onClick={() => navigate("/pharmacies")}

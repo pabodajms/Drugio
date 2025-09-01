@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:drugio_mobile/screens/role_selection_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const DrugioApp());
 }
 
@@ -12,9 +15,9 @@ class DrugioApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Drugio',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const HomeScreen(),
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const RoleSelectionScreen(),
     );
   }
 }

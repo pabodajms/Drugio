@@ -1,3 +1,5 @@
 .env
 
 config/firebaseAdmin.json
+
+node_modules/

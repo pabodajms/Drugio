@@ -24,7 +24,7 @@ async function geocodeAddress(address) {
     }
     return null;
   } catch (error) {
-    console.error("❌ Geocoding failed for:", address, error.message);
+    console.error("Geocoding failed for:", address, error.message);
     return null;
   }
 }
@@ -39,7 +39,7 @@ function queryDb(sql, params = []) {
 }
 
 async function updatePharmacyCoordinates() {
-  console.log("🔍 Fetching pharmacies without coordinates...");
+  console.log("Fetching pharmacies without coordinates...");
 
   try {
     // Get pharmacies that need geocoding
@@ -48,17 +48,15 @@ async function updatePharmacyCoordinates() {
     );
 
     if (pharmacies.length === 0) {
-      console.log("✅ All pharmacies already have coordinates!");
+      console.log("All pharmacies already have coordinates!");
       return;
     }
 
-    console.log(`📌 Found ${pharmacies.length} pharmacies to geocode...`);
+    console.log(`Found ${pharmacies.length} pharmacies to geocode...`);
 
     // Process each pharmacy
     for (const pharmacy of pharmacies) {
-      console.log(
-        `📍 Geocoding: ${pharmacy.pharmacyName} (${pharmacy.address})`
-      );
+      console.log(`Geocoding: ${pharmacy.pharmacyName} (${pharmacy.address})`);
 
       const coords = await geocodeAddress(pharmacy.address);
 
@@ -69,13 +67,13 @@ async function updatePharmacyCoordinates() {
         );
         console.log(`✔ Updated coordinates for ${pharmacy.pharmacyName}`);
       } else {
-        console.log(`❌ Failed to geocode: ${pharmacy.address}`);
+        console.log(`Failed to geocode: ${pharmacy.address}`);
       }
     }
 
-    console.log("🎉 Geocoding complete!");
+    console.log("Geocoding complete!");
   } catch (error) {
-    console.error("❌ Database error:", error.message);
+    console.error("Database error:", error.message);
   } finally {
     db.end(); // Close the connection
     process.exit();
