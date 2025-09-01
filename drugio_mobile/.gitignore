@@ -43,3 +43,5 @@ gradlew.bat
 *.lock
 
 android/app/google-services.json
+
+lib/config/api_config.dart

@@ -1,12 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:drugio_mobile/config/api_config.dart';
 
 class PharmacyService {
-  // static const String baseUrl =
-  //     "http://10.0.2.2:3030/api/pharmacies"; // 10.0.2.2 for emulator
-  // static const String baseUrl =
-  //     "http://localhost:3030/api/pharmacies"; // Use this for local testing
-  static const String baseUrl = "http://192.168.8.144:3030/api/pharmacies";
+  static final String baseUrl = "${ApiConfig.baseUrl}/api/pharmacies";
 
   static Future<List<dynamic>> getNearbyPharmacies(
     double lat,

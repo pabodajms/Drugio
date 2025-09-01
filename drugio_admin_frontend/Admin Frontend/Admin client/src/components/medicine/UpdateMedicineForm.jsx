@@ -47,7 +47,7 @@ const UpdateMedicineForm = () => {
           "typeOfDrug",
           "packageType",
           "temperature",
-          "specialAdvice",
+          "coat",
         ].map((field) => (
           <div className="col-md-6 mb-3" key={field}>
             <label>{field.replace(/([A-Z])/g, " $1")}</label>
@@ -93,8 +93,8 @@ const UpdateMedicineForm = () => {
           <input
             type="text"
             className="form-control"
-            name="distributorName"
-            value={formData.distributorName || ""}
+            name="localDistributorName"
+            value={formData.localDistributorName || ""}
             onChange={handleChange}
           />
         </div>
@@ -103,8 +103,8 @@ const UpdateMedicineForm = () => {
           <input
             type="text"
             className="form-control"
-            name="distributorContact"
-            value={formData.distributorContact || ""}
+            name="localDistributorContact"
+            value={formData.localDistributorContact || ""}
             onChange={handleChange}
           />
         </div>
@@ -113,8 +113,8 @@ const UpdateMedicineForm = () => {
           <input
             type="text"
             className="form-control"
-            name="distributorAddress"
-            value={formData.distributorAddress || ""}
+            name="localDistributorAddress"
+            value={formData.localDistributorAddress || ""}
             onChange={handleChange}
           />
         </div>

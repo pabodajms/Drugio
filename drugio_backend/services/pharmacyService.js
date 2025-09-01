@@ -31,26 +31,6 @@ export const getPharmacyById = async (id) => {
   });
 };
 
-// Add a new pharmacy
-// export const addPharmacy = async (pharmacyData) => {
-//   const sql =
-//     "INSERT INTO Pharmacy (pharmacyName, contactNumber, whatsappNumber, address) VALUES (?, ?, ?, ?)";
-//   return new Promise((resolve, reject) => {
-//     db.query(
-//       sql,
-//       [
-//         pharmacyData.pharmacyName,
-//         pharmacyData.contactNumber,
-//         pharmacyData.whatsappNumber,
-//         pharmacyData.address,
-//       ],
-//       (err, result) => {
-//         if (err) reject(err);
-//         else resolve(result);
-//       }
-//     );
-//   });
-// };
 // Add a new pharmacy with geocoding
 export const addPharmacy = async (pharmacyData) => {
   try {
@@ -100,26 +80,6 @@ export const addPharmacy = async (pharmacyData) => {
     throw error;
   }
 };
-
-// Update a pharmacy
-// export const updatePharmacy = async (id, pharmacyData) => {
-//   return new Promise((resolve, reject) => {
-//     db.query(
-//       "UPDATE Pharmacy SET pharmacyName = ?, contactNumber = ?, whatsappNumber = ?, address = ? WHERE pharmacy_Id = ?",
-//       [
-//         pharmacyData.pharmacyName,
-//         pharmacyData.contactNumber,
-//         pharmacyData.whatsappNumber,
-//         pharmacyData.address,
-//         id,
-//       ],
-//       (err, result) => {
-//         if (err) reject(err);
-//         else resolve(result);
-//       }
-//     );
-//   });
-// };
 
 export const updatePharmacy = async (id, pharmacyData) => {
   try {

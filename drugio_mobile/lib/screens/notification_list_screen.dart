@@ -23,7 +23,7 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
 
   Future<void> _loadPrescriptions() async {
     try {
-      // ✅ fetch pharmacistId from SharedPreferences
+      // fetch pharmacistId from SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       final pharmacistId = prefs.getInt('pharmacist_Id');
       if (pharmacistId == null) {

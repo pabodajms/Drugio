@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getPharmacies, deletePharmacy } from "../../services/pharmacyServices"; // Import deletePharmacy
+import { getPharmacies, deletePharmacy } from "../../services/pharmacyServices";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaPhone, FaWhatsapp } from "react-icons/fa";
 

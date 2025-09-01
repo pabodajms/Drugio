@@ -64,7 +64,7 @@ export const registerAdmin = async (req, res) => {
         // Insert user into MySQL if not exists
         db.query(
           "INSERT INTO admins (firebase_uid, email, created_at) VALUES (?, ?, NOW())",
-          [firebaseUid, email], // Ensure firebaseUid is used properly
+          [firebaseUid, email],
           (err, result) => {
             if (err) {
               console.error("Database error:", err);
@@ -74,7 +74,7 @@ export const registerAdmin = async (req, res) => {
             res.status(201).json({
               message: "Admin registered successfully",
               admin_Id: result.insertId,
-              firebase_uid: firebaseUid, // Ensure correct UID is returned
+              firebase_uid: firebaseUid,
             });
           }
         );

@@ -79,18 +79,6 @@ const Sidebar = () => {
           <FaStore className="me-2" size={18} />
           {!isCollapsed && <span>Prescriptions</span>}
         </NavLink>
-
-        {/* <NavLink
-          to="/settings"
-          className={({ isActive }) =>
-            `d-flex align-items-center px-3 py-2 nav-link ${
-              isActive ? "bg-primary text-white rounded" : "text-secondary"
-            }`
-          }
-        >
-          <FaCog className="me-2" size={18} />
-          {!isCollapsed && <span>Settings</span>}
-        </NavLink> */}
       </nav>
     </div>
   );

@@ -154,7 +154,7 @@ const MedicineTable = () => {
                 <td>{medicine.genericName}</td>
                 <td>{medicine.brandName}</td>
                 <td>{medicine.manufacturerName}</td>
-                <td>{medicine.distributorName}</td>
+                <td>{medicine.localDistributorName}</td>
                 <td>{medicine.packSize}</td>
                 <td>{medicine.dosageForm}</td>
               </tr>

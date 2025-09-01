@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getPharmacies, updatePharmacy } from "../../services/pharmacyServices"; // Assuming updatePharmacy exists
+import { getPharmacies, updatePharmacy } from "../../services/pharmacyServices";
 import { FaPhone, FaWhatsapp } from "react-icons/fa";
 
 const UpdatePharmacy = () => {
@@ -40,8 +40,8 @@ const UpdatePharmacy = () => {
     setError("");
 
     try {
-      await updatePharmacy(id, pharmacy); // Assuming updatePharmacy is implemented
-      navigate(`/pharmacies`); // Redirect to pharmacy details page after update
+      await updatePharmacy(id, pharmacy);
+      navigate(`/pharmacies`);
     } catch (err) {
       setError("Failed to update pharmacy. Please try again.");
     }

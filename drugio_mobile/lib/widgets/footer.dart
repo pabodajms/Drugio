@@ -6,7 +6,7 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 50, // fixed height so it doesn't cover the whole screen
+      height: 50,
       child: Container(
         color: Colors.grey[200],
         padding: const EdgeInsets.symmetric(horizontal: 16),

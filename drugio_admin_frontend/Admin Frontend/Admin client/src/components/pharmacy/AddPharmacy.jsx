@@ -23,7 +23,7 @@ const AddPharmacy = () => {
 
     try {
       await addPharmacy(pharmacy);
-      navigate("/pharmacies"); // Redirect to pharmacy list after adding
+      navigate("/pharmacies");
     } catch (err) {
       setError("Failed to add pharmacy. Please try again.");
     }

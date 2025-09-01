@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { deleteMedicine, getMedicines } from "../../services/medicineServices"; // Import your medicine fetching function
+import { deleteMedicine, getMedicines } from "../../services/medicineServices";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const MedicineDetails = () => {
-  const { id } = useParams(); // Get medicine ID from URL
+  const { id } = useParams();
   const [medicine, setMedicine] = useState(null);
   const navigate = useNavigate();
 
@@ -107,13 +107,13 @@ const MedicineDetails = () => {
             <div className="card p-3">
               <h5 className="text-secondary">Local Distributor Details</h5>
               <p>
-                <strong>Distributor:</strong> {medicine.distributorName}
+                <strong>Distributor:</strong> {medicine.localDistributorName}
               </p>
               <p>
-                <strong>Contact:</strong> {medicine.distributorContact}
+                <strong>Contact:</strong> {medicine.localDistributorContact}
               </p>
               <p>
-                <strong>Address:</strong> {medicine.distributorAddress}
+                <strong>Address:</strong> {medicine.localDistributorAddress}
               </p>
             </div>
           </div>

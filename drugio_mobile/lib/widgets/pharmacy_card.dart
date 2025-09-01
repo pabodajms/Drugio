@@ -43,9 +43,8 @@ class PharmacyCard extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => MessageScreen(
-                        selectedPharmacies: [pharmacy], // pass as list
-                      ),
+                      builder: (_) =>
+                          MessageScreen(selectedPharmacies: [pharmacy]),
                     ),
                   );
                 },

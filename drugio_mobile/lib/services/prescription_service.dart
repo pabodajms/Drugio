@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:drugio_mobile/config/api_config.dart';
 
 class PrescriptionService {
-  final String backendBaseUrl = "http://192.168.8.144:3030";
+  final String backendBaseUrl = ApiConfig.baseUrl;
 
   // Uploads the image to Firebase Storage and returns the download URL
   Future<String> uploadImageToFirebase(File imageFile) async {
@@ -144,7 +145,7 @@ class PrescriptionService {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return data['pharmacist']; // this matches your backend response
+      return data['pharmacist'];
     } else {
       throw Exception("Failed to fetch pharmacist by Firebase UID");
     }

@@ -23,7 +23,6 @@ class _BrandsListScreenState extends State<BrandsListScreen> {
 
   void fetchBrands() async {
     try {
-      // You may need to implement this method in your MedicineService
       final results = await MedicineService.getBrandsByGeneric(
         widget.genericName,
       );

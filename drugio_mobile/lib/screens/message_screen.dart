@@ -68,7 +68,7 @@ class _MessageScreenState extends State<MessageScreen> {
               duration: const Duration(seconds: 5),
             ),
           );
-          break; // Exit loop, resume on next press
+          break;
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(

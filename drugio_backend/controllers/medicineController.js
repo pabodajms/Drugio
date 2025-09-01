@@ -45,20 +45,6 @@ export const deleteMedicine = async (req, res) => {
   }
 };
 
-// export const searchMedicines = async (req, res) => {
-//   try {
-//     const { query, filter } = req.query;
-//     const results = await medicineService.searchMedicines(filter, query); // Fix parameter order
-//     if (results.length === 0) {
-//       res.status(404).json({ message: "Medicine not found" });
-//     } else {
-//       res.status(200).json(results);
-//     }
-//   } catch (err) {
-//     res.status(400).json({ message: err.message });
-//   }
-// };
-
 export const searchMedicines = async (req, res) => {
   try {
     const { query, filter } = req.query;
